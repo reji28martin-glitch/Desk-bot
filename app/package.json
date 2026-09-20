@@ -1,0 +1,17 @@
+{
+  "name": "deskbot-app",
+  "version": "0.1.0",
+  "description": "DeskBot control dashboard - Capacitor wrapper around the static PWA in www/",
+  "scripts": {
+    "sync": "cap sync android",
+    "open:android": "cap open android",
+    "add:android": "cap add android"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/android": "^6.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  }
+}
