@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DeskBot</title>
+<meta name="theme-color" content="#10141b">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">🤖</div>
+      <div class="brand-name">DeskBot</div>
+    </div>
+    <div class="status-pill" id="connPill">
+      <span class="dot off" id="connDot"></span>
+      <span id="connLabel">Offline</span>
+    </div>
+  </div>
+
+  <!-- ============ HOME ============ -->
+  <section class="screen" id="screen-home">
+    <div class="card" style="--accent:var(--cyan)">
+      <div class="camera-frame" id="homeCamFrame">
+        <span>No camera feed</span>
+        <div class="camera-badge" id="homeCamBadge">IDLE</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <button class="btn primary full" style="grid-column:1/3" data-nav="chat">🎤&nbsp; Talk to DeskBot</button>
+      <button class="btn" data-nav="camera">👀 Track Me</button>
+      <button class="btn" data-nav="camera">🎥 Camera</button>
+      <button class="btn" data-nav="memory">🧠 Memory</button>
+      <button class="btn" data-nav="music">🎵 Music</button>
+      <button class="btn" data-nav="control">🎮 Controls</button>
+      <button class="btn" data-nav="settings">⚙ Settings</button>
+    </div>
+
+    <div class="card" style="--accent:var(--amber);margin-top:14px">
+      <h3>Current status</h3>
+      <div class="telemetry-row"><span>Wi-Fi</span><span class="val" id="statWifi">--</span></div>
+      <div class="telemetry-row"><span>Camera</span><span class="val" id="statCam">--</span></div>
+      <div class="telemetry-row"><span>AI backend</span><span class="val" id="statAI">--</span></div>
+      <div class="telemetry-row"><span>Tracking</span><span class="val" id="statTrack">--</span></div>
+      <div class="telemetry-row"><span>Battery</span><span class="val" id="statBatt">--</span></div>
+      <div class="telemetry-row"><span>Robot state</span><span class="val" id="statState">--</span></div>
+    </div>
+  </section>
+
+  <!-- ============ CONTROL ============ -->
+  <section class="screen hidden" id="screen-control">
+    <div class="section-title">Robot control</div>
+    <div class="card" style="--accent:var(--cyan)">
+      <h3>Pan / tilt</h3>
+      <div class="dpad">
+        <button class="up" data-cmd="/servo/tilt/up">▲</button>
+        <button class="left" data-cmd="/servo/pan/left">◀</button>
+        <button class="center" data-cmd="/servo/center">⦿</button>
+        <button class="right" data-cmd="/servo/pan/right">▶</button>
+        <button class="down" data-cmd="/servo/tilt/down">▼</button>
+      </div>
+    </div>
+    <div class="grid-2">
+      <button class="btn primary" data-cmd="/tracking/start">Start Tracking</button>
+      <button class="btn danger" data-cmd="/tracking/stop">Stop Tracking</button>
+    </div>
+    <div class="card" style="--accent:var(--amber);margin-top:14px">
+      <h3>Live values</h3>
+      <div class="telemetry-row"><span>Pan angle</span><span class="val" id="ctlPan">--°</span></div>
+      <div class="telemetry-row"><span>Tilt angle</span><span class="val" id="ctlTilt">--°</span></div>
+      <div class="telemetry-row"><span>Tracking</span><span class="val" id="ctlTracking">--</span></div>
+    </div>
+  </section>
+
+  <!-- ============ CAMERA ============ -->
+  <section class="screen hidden" id="screen-camera">
+    <div class="section-title">Camera</div>
+    <div class="card" style="--accent:var(--cyan)">
+      <div class="camera-frame" id="camFrame">
+        <span>Connect to DeskBot to view stream</span>
+        <div class="camera-badge" id="camBadge">NO FEED</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Vision status</h3>
+      <div class="telemetry-row"><span>Face detected</span><span class="val" id="visFace">No</span></div>
+      <div class="telemetry-row"><span>Recognition</span><span class="val" id="visRecog">--</span></div>
+      <div class="telemetry-row"><span>Tracking</span><span class="val" id="visTrack">Off</span></div>
+    </div>
+    <div class="grid-2">
+      <button class="btn primary" data-cmd="/tracking/start">Start Tracking</button>
+      <button class="btn danger" data-cmd="/tracking/stop">Stop Tracking</button>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3>Manual pan / tilt</h3>
+      <div class="dpad">
+        <button class="up" data-cmd="/servo/tilt/up">▲</button>
+        <button class="left" data-cmd="/servo/pan/left">◀</button>
+        <button class="center" data-cmd="/servo/center">⦿</button>
+        <button class="right" data-cmd="/servo/pan/right">▶</button>
+        <button class="down" data-cmd="/servo/tilt/down">▼</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Owner face</h3>
+      <div class="telemetry-row"><span id="faceStatusLabel">No face registered</span></div>
+      <div class="grid-2" style="margin-top:10px">
+        <button class="btn primary" id="btnRegisterFace">Start Face Registration</button>
+        <button class="btn danger" id="btnRemoveFace">Remove Face</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAT ============ -->
+  <section class="screen hidden" id="screen-chat">
+    <div class="section-title">Talk to DeskBot</div>
+    <div class="chat-log" id="chatLog"></div>
+  </section>
+  <div class="chat-input-bar hidden" id="chatInputBar">
+    <button class="icon-btn mic" id="btnMic">🎤</button>
+    <input type="text" id="chatInput" placeholder="Message DeskBot...">
+    <button class="icon-btn send" id="btnSend">➤</button>
+  </div>
+
+  <!-- ============ MEMORY ============ -->
+  <section class="screen hidden" id="screen-memory">
+    <div class="section-title">My memories</div>
+    <div class="card">
+      <div id="memoryList"></div>
+    </div>
+    <button class="btn primary full" id="btnAddMemory">+ Add memory</button>
+  </section>
+
+  <!-- ============ MUSIC ============ -->
+  <section class="screen hidden" id="screen-music">
+    <div class="section-title">Music</div>
+    <div class="card" style="text-align:center">
+      <div class="nowplaying-art">🎵</div>
+      <div id="musicTitle" style="font-weight:700;font-size:16px">Nothing playing</div>
+      <div id="musicArtist" style="color:var(--text-dim);font-size:13px;margin-top:2px">--</div>
+      <div style="display:flex;justify-content:center;gap:18px;margin-top:20px">
+        <button class="icon-btn" id="btnPrev" style="width:52px;height:52px;font-size:20px">⏮</button>
+        <button class="icon-btn" id="btnPlayPause" style="width:60px;height:60px;font-size:24px;background:var(--cyan);color:#0a1620">▶</button>
+        <button class="icon-btn" id="btnNext" style="width:52px;height:52px;font-size:20px">⏭</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Playback</h3>
+      <div class="telemetry-row"><span>Status</span><span class="val" id="musicStatus">Stopped</span></div>
+      <div class="telemetry-row"><span>Source</span><span class="val">Phone media session</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SETTINGS ============ -->
+  <section class="screen hidden" id="screen-settings">
+    <div class="section-title">Settings</div>
+
+    <div class="card">
+      <h3>Robot</h3>
+      <label>Robot name<input type="text" id="cfgRobotName" placeholder="DeskBot"></label>
+      <label>Robot IP / mDNS address<input type="text" id="cfgRobotHost" placeholder="deskbot.local or 192.168.1.42"></label>
+      <div class="field-hint">Used to reach the ESP32's REST/WebSocket API on your local network.</div>
+    </div>
+
+    <div class="card">
+      <h3>AI backend</h3>
+      <label>Backend URL<input type="text" id="cfgBackendUrl" placeholder="https://your-backend.example.com"></label>
+      <label>Backend access token<input type="password" id="cfgBackendToken" placeholder="shared token from your .env"></label>
+      <div class="field-hint">The app talks to your PHP backend, never to the AI provider directly. No API key is ever stored on-device - only this shared token, which the backend checks per request.</div>
+    </div>
+
+    <div class="card">
+      <h3>Voice</h3>
+      <label>Voice reply</label>
+      <select id="cfgVoiceOutput"><option value="phone">Phone speaker</option><option value="robot">Robot speaker</option></select>
+      <label>Speaker volume<input class="slider" type="range" id="cfgVolume" min="0" max="100" value="70"></label>
+    </div>
+
+    <div class="card">
+      <h3>Servo limits</h3>
+      <label>Pan min / max (°)</label>
+      <div class="grid-2"><input type="number" id="cfgPanMin" value="0"><input type="number" id="cfgPanMax" value="180"></div>
+      <label>Tilt min / max (°)</label>
+      <div class="grid-2"><input type="number" id="cfgTiltMin" value="30"><input type="number" id="cfgTiltMax" value="150"></div>
+    </div>
+
+    <div class="card">
+      <h3>Face tracking</h3>
+      <label>Tracking sensitivity<input class="slider" type="range" id="cfgSensitivity" min="1" max="10" value="5"></label>
+    </div>
+
+    <div class="card">
+      <h3>Memory</h3>
+      <div class="telemetry-row"><span>Storage location</span><span class="val">Robot microSD</span></div>
+      <button class="btn ghost full" id="btnWipeMemory" style="margin-top:8px;color:var(--red)">Wipe robot memory</button>
+    </div>
+
+    <button class="btn primary full" id="btnSaveSettings">Save settings</button>
+
+    <div class="card" style="margin-top:14px">
+      <h3>About</h3>
+      <div class="telemetry-row"><span>App version</span><span class="val">0.1.0</span></div>
+      <div class="telemetry-row"><span>Protocol</span><span class="val">deskbot-http/1</span></div>
+    </div>
+  </section>
+
+  <div class="tabbar">
+    <button class="tab active" data-nav="home"><span class="ic">🏠</span>Home</button>
+    <button class="tab" data-nav="chat"><span class="ic">💬</span>Chat</button>
+    <button class="tab" data-nav="camera"><span class="ic">🎥</span>Camera</button>
+    <button class="tab" data-nav="control"><span class="ic">🎮</span>Control</button>
+    <button class="tab" data-nav="memory"><span class="ic">🧠</span>Memory</button>
+    <button class="tab" data-nav="music"><span class="ic">🎵</span>Music</button>
+    <button class="tab" data-nav="settings"><span class="ic">⚙</span>Settings</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/robot.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/memory.js"></script>
+<script src="js/music.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/app.js"></script>
+<script src="js/register-sw.js"></script>
+</body>
+</html>

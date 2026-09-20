@@ -1,0 +1,14 @@
+{
+  "name": "DeskBot",
+  "short_name": "DeskBot",
+  "description": "Control dashboard and AI companion for the DeskBot ESP32-S3 desk robot",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#10141b",
+  "theme_color": "#10141b",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
